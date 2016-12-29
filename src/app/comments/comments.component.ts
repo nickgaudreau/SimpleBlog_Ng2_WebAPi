@@ -11,9 +11,7 @@ export class CommentsComponent implements OnInit {
 
   ngOnInit() {
 
-    // TODO: next receive the Post by id clicked and display... 
-    // based on that post display the coments: from post => post.postId we will retrive all comments => comment.postId == post.postId
-
+    
   }
 
 }

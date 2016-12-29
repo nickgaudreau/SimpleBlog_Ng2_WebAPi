@@ -19,11 +19,27 @@ export class PostsComponent implements OnInit {
 
 
   ngOnInit() {
-    this._postService.getApiPosts()
+    this._postService.getAll()
       .subscribe(
       data => this.posts = data, // here
       error => this.errorMessage = <any>error // <any> is a cat ops to any data type
       );
+
+    // testing CRUD below
+
+    //ok
+    this._postService.getById(1).subscribe();
+
+
+    let post: IPost = {
+        id: 0,
+        title: "From Ng2",
+        createdDate: "",
+        text: "THis is a new post form the lcinet ng 2 app",
+        username: "admin"
+    };
+    // boolean -> ok
+    //this._postService.create(post).subscribe();
 
   }
 

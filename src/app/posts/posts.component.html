@@ -4,24 +4,24 @@
   <div class="col-md-8">
 
     <h1 class="page-header">
-      Page Heading
+      Posts
       <small>Secondary Text</small>
     </h1>
 
     <!-- First Blog Post -->
     <div *ngFor='let post of posts'>
       <h2>
-        <a [routerLink]="['/Comments']">{{post.title}}</a>
+        <a [routerLink]="['/PostDetails']">{{post.title}}</a>
       </h2>
       <p class="lead">
-        by: <a [routerLink]="['/Comments']"> {{post.username}}</a>
+        by: <a [routerLink]="['/PostDetails']"> {{post.username}}</a>
       </p>
       <p><span class="glyphicon glyphicon-time"></span> Posted on: {{post.createdDate}}</p>
       <hr>
       <img class="img-responsive" src="http://placehold.it/900x300" alt="">
       <hr>
       <p>{{post.text}}.</p>
-      <a class="btn btn-primary" [routerLink]="['/Comments']">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+      <a class="btn btn-primary" [routerLink]="['/PostDetails']">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
       <hr>
     </div>

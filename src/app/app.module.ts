@@ -10,13 +10,15 @@ import { PostsComponent } from './posts/posts.component';
 import { CommentsComponent } from './comments/comments.component';
 
 import { PostsService } from './posts/posts.service';
+import { PostDetailsComponent } from './post-details/post-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PostsComponent,
     HomeComponent,
-    CommentsComponent
+    CommentsComponent,
+    PostDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +32,7 @@ import { PostsService } from './posts/posts.service';
                 path : 'Posts', component : PostsComponent
             },
             {
-                path : 'Comments', component : CommentsComponent
+                path : 'PostDetails', component : PostDetailsComponent
             },
             { //default
                 path : '', redirectTo : 'Home', pathMatch : 'full'

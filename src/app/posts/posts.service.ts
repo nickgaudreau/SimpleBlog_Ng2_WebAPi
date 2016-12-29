@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPost } from '../posts/IPost';
-import { Http, Response, Headers } from '@angular/http';
+import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -10,32 +10,59 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class PostsService {
 
-    private _webApiBaseUrl = "http://localhost:62806/v1/Posts/all"
+    private _webApiBaseUrl = "http://localhost:62806/v1/Posts"
     private _http : Http;
 
     constructor(http : Http){
         this._http = http;
-    }
+    }   
 
-    getApiPosts(): Observable<IPost[]>{
-        let headers = new Headers();
-        headers.append("Authorization", "Basic YWRtaW46QWRtaW5XZWJBcGlEaQ=="); 
-        headers.append("Content-Type", "application/x-www-form-urlencoded");
-
-        return this._http.get(this._webApiBaseUrl, {headers : headers})
-            .map( (response: Response) => <IPost[]> response.json() )
-            .do(data => console.log(`All Data: \n ${ JSON.stringify(data) }`))
-            .catch(this.handleError);
-    }
-
-    getApiPost(id: number): Observable<IPost> {
-        return this.getApiPosts()
-            .map((posts: IPost[]) => posts.find(p => p.id === id));
-    }
+    getAll(): Observable<IPost[]> {
+        return this._http.get(this._webApiBaseUrl + '/all', this.getHeaders())
+        .map((response: Response) => response.json())
+        .do(data => console.log(`All Data: \n ${ JSON.stringify(data) }`))
+        .catch(this.handleError);
+    }
+ 
+    getById(id: number): Observable<IPost> {
+        return this._http.get(this._webApiBaseUrl + '/get/' + id, this.getHeaders())
+        .map((response: Response) => response.json())
+        .do(data => console.log(` Data by id: ${id} :: \n ${ JSON.stringify(data) }`))
+        .catch(this.handleError);
+    }
+ 
+    create(post: IPost): Observable<IPost> {
+        return this._http.post(this._webApiBaseUrl + '/add', post,  this.getHeaders())
+        .map((response: Response) => response.json())
+        .do(data => console.log(`Data returned created :: \n ${JSON.stringify(data)}`))
+        .catch(this.handleError);
+    }
+ 
+    update(post: IPost): Observable<boolean> {
+        return this._http.put(this._webApiBaseUrl + '/update/' + post.id, post, this.getHeaders())
+        .map((response: Response) => response.json())
+        .do(data => console.log(`Data returned created :: \n ${JSON.stringify(data)}`))
+        .catch(this.handleError);
+    }
+ 
+    delete(id: number): Observable<boolean> {
+        return this._http.delete(this._webApiBaseUrl + '/delete/' + id, this.getHeaders())
+        .map((response: Response) => response.json())
+        .do(data => console.log(`Data returned created :: \n ${JSON.stringify(data)}`))
+        .catch(this.handleError);
+    }
 
     private handleError(error: Response){
         console.error(error);
         return Observable.throw(error.json().error || 'Server Error');
     }    
+
+    private getHeaders()
+    {
+        let headers = new Headers();
+        headers.append("Authorization", "Basic YWRtaW46QWRtaW5XZWJBcGlEaQ=="); 
+        headers.append("Content-Type", "application/json");
+        return new RequestOptions({ headers: headers });
+    }
 
 }
