@@ -8,9 +8,11 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { PostsComponent } from './posts/posts.component';
 import { CommentsComponent } from './comments/comments.component';
-
-import { PostsService } from './posts/posts.service';
 import { PostDetailsComponent } from './post-details/post-details.component';
+
+import { PostServices } from './posts/posts.service';
+import { CommentsServices } from './comments/comments.service';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +34,7 @@ import { PostDetailsComponent } from './post-details/post-details.component';
                 path : 'Posts', component : PostsComponent
             },
             {
-                path : 'PostDetails', component : PostDetailsComponent
+                path : 'PostDetails/:id', component : PostDetailsComponent
             },
             { //default
                 path : '', redirectTo : 'Home', pathMatch : 'full'
@@ -42,7 +44,7 @@ import { PostDetailsComponent } from './post-details/post-details.component';
             }
     ])
   ],
-  providers: [PostsService],
+  providers: [PostServices, CommentsServices],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

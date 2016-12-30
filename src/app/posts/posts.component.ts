@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IPost } from './IPost';
-import { PostsService } from './posts.service';
+import { PostServices } from './posts.service';
 
 @Component({
   selector: 'app-posts',
@@ -12,23 +12,23 @@ export class PostsComponent implements OnInit {
   posts: IPost[];
   errorMessage: string;
 
-  private _postService: PostsService;
-  constructor(productService: PostsService) {
-    this._postService = productService;
+  private _postService: PostServices;
+  constructor(postService: PostServices) {
+    this._postService = postService;
   }
 
 
   ngOnInit() {
     this._postService.getAll()
       .subscribe(
-      data => this.posts = data, // here
+      data => {this.posts = data; console.log("data.length: " + data.length)}, // here
       error => this.errorMessage = <any>error // <any> is a cat ops to any data type
       );
 
     // testing CRUD below
 
     //ok
-    this._postService.getById(1).subscribe();
+    //this._postService.getById(1).subscribe();
 
 
     let post: IPost = {

@@ -11,17 +11,17 @@
     <!-- First Blog Post -->
     <div *ngFor='let post of posts'>
       <h2>
-        <a [routerLink]="['/PostDetails']">{{post.title}}</a>
+        <a [routerLink]="['/PostDetails', post.id]">{{post.title}}</a>
       </h2>
       <p class="lead">
-        by: <a [routerLink]="['/PostDetails']"> {{post.username}}</a>
+        by: <a [routerLink]="[  ]"> {{post.username}}</a>
       </p>
       <p><span class="glyphicon glyphicon-time"></span> Posted on: {{post.createdDate}}</p>
       <hr>
       <img class="img-responsive" src="http://placehold.it/900x300" alt="">
       <hr>
       <p>{{post.text}}.</p>
-      <a class="btn btn-primary" [routerLink]="['/PostDetails']">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+      <a class="btn btn-primary" [routerLink]="['/PostDetails', post.id]">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
       <hr>
     </div>

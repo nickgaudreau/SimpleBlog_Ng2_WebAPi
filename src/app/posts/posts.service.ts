@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IPost } from '../posts/IPost';
+import { IPost } from './IPost';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 
 
 @Injectable()
-export class PostsService {
+export class PostServices {
 
     private _webApiBaseUrl = "http://localhost:62806/v1/Posts"
     private _http : Http;
@@ -23,7 +23,8 @@ export class PostsService {
         .do(data => console.log(`All Data: \n ${ JSON.stringify(data) }`))
         .catch(this.handleError);
     }
- 
+    
+    
     getById(id: number): Observable<IPost> {
         return this._http.get(this._webApiBaseUrl + '/get/' + id, this.getHeaders())
         .map((response: Response) => response.json())
