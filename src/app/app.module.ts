@@ -12,6 +12,8 @@ import { PostDetailsComponent } from './post-details/post-details.component';
 
 import { PostServices } from './posts/posts.service';
 import { CommentsServices } from './comments/comments.service';
+import { WriteCommentComponent } from './write-comment/write-comment.component';
+import { WritePostComponent } from './write-post/write-post.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import { CommentsServices } from './comments/comments.service';
     PostsComponent,
     HomeComponent,
     CommentsComponent,
-    PostDetailsComponent
+    PostDetailsComponent,
+    WriteCommentComponent,
+    WritePostComponent
   ],
   imports: [
     BrowserModule,

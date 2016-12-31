@@ -1,6 +1,13 @@
-<h3>
-  Comments
-  </h3>
-  <h3>
-  Comments
-  </h3>
+<h3>{{title}}</h3>
+
+<div class="media" *ngIf='comments'>
+      <a class="pull-left" href="#">
+        <img class="media-object" src="http://placehold.it/64x64" alt="">
+      </a>
+      <div class="media-body">
+        <h4 class="media-heading">{{comments.username | json}}
+          <small>{{comments.createdDate}}</small>
+        </h4>
+        {{comments.text}}
+      </div>
+    </div>
