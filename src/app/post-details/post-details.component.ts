@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IPost } from '../posts/IPost';
 import { ActivatedRoute, Router } from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
 
 import { Subscription } from 'rxjs/Subscription';
 import { PostServices } from '../posts/posts.service';
@@ -24,9 +26,11 @@ export class PostDetailsComponent implements OnInit {
       this._activatedRoute = activatedRoute;
       this._router = router;
       this._postService = postService;
+      console.log('constructor details');
   }
 
   ngOnInit() {
+    console.log('init details');
     // snapshot is static and get id from generated page url
     let id = +this._activatedRoute.snapshot.params['id']; // the + is a JS shortcut to change a string into a number 
     this.postTitle = `${id}`;
@@ -35,6 +39,8 @@ export class PostDetailsComponent implements OnInit {
         params => {
             let id = +params['id'];
             this.getPost(id);
+            //this.getCommentsWhere(id);
+            //this.getPage(id);
     });  
   }
 
@@ -42,15 +48,32 @@ export class PostDetailsComponent implements OnInit {
       this._postService.getById(id).subscribe(
           post => this.post = post,
           error => this.errorMessage = <any>error, 
-          () =>  this.onComplete() 
+          () =>  this.onComplete(id) 
       );
   }
 
-  onComplete(){
+  // concurent call to api
+  // getPage(id: number){
+  //     Observable.forkJoin(
+  //       this._postService.getById(id),
+  //       this._commentsServices.getAllWhere(id)
+  //   ).subscribe(
+  //     data => {
+  //       this.post = data[0]; console.log(data[0]);
+  //       this.comments_details = data[1]; console.log(data[1]);
+  //     },
+  //     err => console.error(err)
+  //   );
+  // }
+
+  onComplete(id: number){
     console.log('completed method');
     this.postTitle = this.post.title + ": " + this.post.id;
-    //this.getComments();
-  }
-  
+  }  
+
+  // parentHandlingFcn(receivedParam: IComment[]) {
+  //   console.log("this executes third, with " + receivedParam.length); //string from child
+  //   this.comments_details = receivedParam;
+  // }
 
 }
