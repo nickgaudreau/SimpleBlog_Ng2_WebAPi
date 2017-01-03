@@ -22,8 +22,7 @@ export class PostServices {
         .map((response: Response) => response.json())
         .do(data => console.log(`All Data: \n ${ JSON.stringify(data) }`))
         .catch(this.handleError);
-    }
-    
+    }    
     
     getById(id: number): Observable<IPost> {
         return this._http.get(this._webApiBaseUrl + '/get/' + id, this.getHeaders())

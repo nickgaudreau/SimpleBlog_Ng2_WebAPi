@@ -1,6 +1,7 @@
 <!-- Comments Form -->
 <div class="well">
-  <h4>Leave a Comment:</h4>
+  <div class="alert alert-success" *ngIf="commentSaved">Comment added.</div>
+  <h4>{{title}}</h4>
   <form role="form" [formGroup]="saveCommentForm" (ngSubmit)="saveComment($event)">
     <div class="form-group"  [ngClass]="{'has-error':!saveCommentForm.controls['comment_text'].valid && saveCommentForm.controls['comment_text'].touched}">
       <textarea class="form-control" [formControl]="saveCommentForm.controls['comment_text']" rows="3"></textarea>
@@ -10,7 +11,6 @@
     <button type="submit" class="btn btn-primary" [disabled]="!saveCommentForm.valid">Submit</button>
   </form>
 </div>
-<div class="alert alert-success" *ngIf="commentSaved">Comment added.</div>
 <hr>
 
 <!-- Posted Comments -->

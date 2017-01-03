@@ -3,5 +3,5 @@ export interface IComment{
     createdDate: string;
     text: string;
     username: string;
-    postId: string;
+    postId: number;
 }

@@ -12,7 +12,6 @@ import { PostDetailsComponent } from './post-details/post-details.component';
 
 import { PostServices } from './posts/posts.service';
 import { CommentsServices } from './comments/comments.service';
-import { WriteCommentComponent } from './write-comment/write-comment.component';
 import { WritePostComponent } from './write-post/write-post.component';
 
 
@@ -23,7 +22,6 @@ import { WritePostComponent } from './write-post/write-post.component';
     HomeComponent,
     CommentsComponent,
     PostDetailsComponent,
-    WriteCommentComponent,
     WritePostComponent
   ],
   imports: [
@@ -39,7 +37,10 @@ import { WritePostComponent } from './write-post/write-post.component';
                 path : 'Posts', component : PostsComponent
             },
             {
-                path : 'PostDetails/:id', component : PostDetailsComponent
+                path : 'Write', component : WritePostComponent
+            },
+            {
+                path : 'PostDetails/:id/:username', component : PostDetailsComponent
             },
             { //default
                 path : '', redirectTo : 'Home', pathMatch : 'full'

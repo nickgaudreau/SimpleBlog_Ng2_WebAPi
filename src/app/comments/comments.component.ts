@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { IComment } from './IComment';
+import { IPost } from '../posts/IPost';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
@@ -12,9 +13,12 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./comments.component.css']
 })
 export class CommentsComponent implements OnInit, OnChanges {
-  title: string = "Comments API";
+  title: string = "Leave a Comment: ";
   comments: IComment[];
   errorMessage: string;
+  commentSaved : boolean = false;
+  private postId : number;
+  private postUser : string;
   private subscription: Subscription;
 
   private _activatedRoute: ActivatedRoute;
@@ -23,7 +27,7 @@ export class CommentsComponent implements OnInit, OnChanges {
 
   saveCommentForm: FormGroup;
 
-  commentSaved : boolean = false;
+  
 
   //@Output() childReadyEvent: EventEmitter<IComment[]> = new EventEmitter();
 
@@ -47,7 +51,12 @@ export class CommentsComponent implements OnInit, OnChanges {
     let id = +this._activatedRoute.snapshot.params['id']; // the + is a JS shortcut to change a string into a number
     console.log("comments ts " + id); // the + is a JS shortcut to change a string into a number)
     this.getCommentsWhere(id);
+    this.postId = id;
 
+    let username = this._activatedRoute.snapshot.params['username']; 
+    this.postUser = username;
+
+    this.getDate(); // debig
   }
 
   // TODO listener on success comments added
@@ -70,21 +79,21 @@ export class CommentsComponent implements OnInit, OnChanges {
     )
   }
 
-
+  // on submit method
   saveComment(event) {
     console.log(event);
     let txt = this.saveCommentForm.value;
     console.log(txt.comment_text);
-    if (this.comments != null && this.comments.length > 0) {
+    if (this.postId != 0 && this.postUser != null && this.postUser != '') {
       let comment: IComment = {
         id: 0,
-        createdDate: "", // server side
+        createdDate: new Date().toLocaleDateString(), // server side, but need it here too due to async issue
         text: txt.comment_text,
-        username: this.comments[0].username, // for now
-        postId: this.comments[0].postId
+        username: this.postUser, 
+        postId: this.postId
       }
       this._commentsServices.create(comment).subscribe(
-        obj => { this.onSuccessCommentSaved(obj, comment) },
+        data => { this.onSuccessCommentSaved(data) },
         error => this.errorMessage = <any>error,
         () => { }
       )
@@ -97,12 +106,36 @@ export class CommentsComponent implements OnInit, OnChanges {
     }
   }
 
-  onSuccessCommentSaved(data : IComment, userComment : IComment){
-      userComment.postId = data.postId;
-      userComment.createdDate = data.createdDate;
-      this.comments.push(userComment);
+  onSuccessCommentSaved(data : IComment){
+      if(this.comments == null)
+        this.comments = [data]
+      else
+        this.comments.push(data);
+        
       this.commentSaved = true;
-      setTimeout(() => this.commentSaved = false, 500);
+      setTimeout(() => this.commentSaved = false, 2000);
+  }
+
+  getDate(): string{
+    // Number.prototype.padLeft = function (base, chr) {
+    //     var len = (String(base || 10).length - String(this).length) + 1;
+    //     return len > 0 ? new Array(len).join(chr || '0') + this : this;
+    // }
+    // var today = new Date();
+    // var todayFormatted =
+    //     [(today.getMonth() + 1).padLeft(),
+    //         (today.getDate()).padLeft(),
+    //         today.getFullYear()].join('/');
+
+    var currentdate = new Date(); 
+    var datetime = currentdate.getFullYear() + "-"
+                + (currentdate.getMonth()+1)  + "-" 
+                + currentdate.getDate() + " T "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+    console.log(datetime);
+    return datetime;
   }
 
 }
