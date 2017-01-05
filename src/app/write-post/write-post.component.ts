@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 import { IPost } from '../posts/IPost';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
@@ -6,13 +6,14 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { PostServices } from '../posts/posts.service';
 import { Subscription } from 'rxjs/Subscription';
 
+declare var $: any;
+
 @Component({
   selector: 'app-write-post',
   templateUrl: './write-post.component.html',
   styleUrls: ['./write-post.component.css']
 })
 export class WritePostComponent implements OnInit {
-
   posts: IPost[];
   errorMessage: string;
   postSaved : boolean = false;
@@ -46,6 +47,9 @@ export class WritePostComponent implements OnInit {
   ngOnInit() {
     //let username = this._activatedRoute.snapshot.params['username']; 
     this.postUser = "admin";//username; // for now until have membership pro
+
+    // $ for summernote to load
+    $('#summernote').summernote();
   }
 
   // TODO listener on success posts added
@@ -58,13 +62,12 @@ export class WritePostComponent implements OnInit {
   savePost(event) {
     console.log(event);
     let form = this.savePostForm.value;
-    console.log(form.post_text);
     if (this.postUser != null && this.postUser != '') {
       let post: IPost = {
         id: 0,
         title: form.post_title,
         createdDate: new Date().toLocaleDateString(), // server side, but need it here too due to async issue
-        text: form.post_text,
+        text: $('#summernote').summernote('code'),
         username: this.postUser
       }
       this._postServices.create(post).subscribe(

@@ -4,17 +4,18 @@
   <form role="form" [formGroup]="savePostForm" (ngSubmit)="savePost($event)">
     <div class="form-group" [ngClass]="{'has-error':!savePostForm.controls['post_title'].valid && savePostForm.controls['post_title'].touched}">
       <label>Title</label>
-      <input class="form-control" type="text" [formControl]="savePostForm.controls['post_title']">
+      <input [(ngModel)]="testNgModel" class="form-control" type="text" [formControl]="savePostForm.controls['post_title']">
       <!-- Here we are using the ngIf directive to display an error message  -->
       <div class="alert alert-danger" *ngIf="!savePostForm.controls['post_title'].valid && savePostForm.controls['post_title'].touched">You must enter a title.</div>
     </div>
     <div class="form-group" [ngClass]="{'has-error':!savePostForm.controls['post_text'].valid && savePostForm.controls['post_text'].touched}">
       <label>Post</label>
-      <textarea class="form-control" [formControl]="savePostForm.controls['post_text']" rows="3"></textarea>
+      <textarea id="summernote" class="form-control" [formControl]="savePostForm.controls['post_text']" rows="3"></textarea>      
       <!-- Here we are using the ngIf directive to display an error message  -->
       <div class="alert alert-danger" *ngIf="!savePostForm.controls['post_text'].valid && savePostForm.controls['post_text'].touched">You must enter a text.</div>
     </div>
-    <button type="submit" class="btn btn-primary" [disabled]="!savePostForm.valid">Submit</button>
+    <!--<button type="submit" class="btn btn-primary" [disabled]="!savePostForm.valid">Submit</button>-->
+    <button type="submit" class="btn btn-primary" >Submit</button>
   </form>
 </div>
 <hr>

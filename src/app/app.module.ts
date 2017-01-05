@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
@@ -13,44 +13,62 @@ import { PostDetailsComponent } from './post-details/post-details.component';
 import { PostServices } from './posts/posts.service';
 import { CommentsServices } from './comments/comments.service';
 import { WritePostComponent } from './write-post/write-post.component';
+import { RepliesComponent } from './replies/replies.component';
+
+// TODO: this to go in his own file...
+import { DomSanitizer } from '@angular/platform-browser'
+@Pipe({ name: 'escapeHtml', pure: false })
+export class EscapeHtmlPipe implements PipeTransform {
+    constructor(private sanitized: DomSanitizer) { }
+    transform(value: any, args: any[] = []) {       
+        // double check remove JS injection
+        if (value.indexOf('<script>') != -1) {
+            console.log('JS injection. . . html purified');
+            return value.replace('<script>', '').replace('<\/script>', '');
+        }
+        return this.sanitized.bypassSecurityTrustHtml(value); // so ng2 does not remove CSS
+    }
+}
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PostsComponent,
-    HomeComponent,
-    CommentsComponent,
-    PostDetailsComponent,
-    WritePostComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    ReactiveFormsModule,
-    RouterModule.forRoot([   
+    declarations: [
+        AppComponent,
+        PostsComponent,
+        HomeComponent,
+        CommentsComponent,
+        PostDetailsComponent,
+        WritePostComponent,
+        RepliesComponent,
+        EscapeHtmlPipe
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        ReactiveFormsModule,
+        RouterModule.forRoot([
             {
-                path : 'Home', component : HomeComponent
-            }, 
-            {
-                path : 'Posts', component : PostsComponent
+                path: 'Home', component: HomeComponent
             },
             {
-                path : 'Write', component : WritePostComponent
+                path: 'Posts', component: PostsComponent
             },
             {
-                path : 'PostDetails/:id/:username', component : PostDetailsComponent
+                path: 'Write', component: WritePostComponent
+            },
+            {
+                path: 'PostDetails/:id/:username', component: PostDetailsComponent
             },
             { //default
-                path : '', redirectTo : 'Home', pathMatch : 'full'
+                path: '', redirectTo: 'Home', pathMatch: 'full'
             },
             { // not found
-                path : '**', component : HomeComponent // will have a page not found component
+                path: '**', component: HomeComponent // will have a page not found component
             }
-    ])
-  ],
-  providers: [PostServices, CommentsServices],
-  bootstrap: [AppComponent]
+        ])
+    ],
+    providers: [PostServices, CommentsServices],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

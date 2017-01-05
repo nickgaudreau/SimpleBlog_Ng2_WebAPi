@@ -2,7 +2,6 @@
 
   <!-- Blog Entries Column -->
   <div class="col-md-8">
-
     <h1 class="page-header">
       Posts
       <small>Secondary Text</small>
@@ -14,13 +13,13 @@
         <a [routerLink]="['/PostDetails', post.id, post.username]">{{post.title}}</a>
       </h2>
       <p class="lead">
-        by: <a [routerLink]="[  ]"> {{post.username}}</a>
+        by: <a [routerLink]="['/PostDetails', post.id, post.username]"> {{post.username}}</a>
       </p>
       <p><span class="glyphicon glyphicon-time"></span> Posted on: {{post.createdDate}}</p>
       <hr>
-      <img class="img-responsive" src="http://placehold.it/900x300" alt="">
-      <hr>
-      <p>{{post.text}}.</p>
+      <!--<p>{{post.text}}.</p>-->
+      <p [innerHTML]="post.text | escapeHtml"></p>
+      <hr>      
       <a class="btn btn-primary" [routerLink]="['/PostDetails', post.id, post.username]">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
       <hr>
