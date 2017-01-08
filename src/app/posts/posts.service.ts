@@ -10,7 +10,8 @@ import 'rxjs/add/operator/catch';
 @Injectable()
 export class PostServices {
 
-    private _webApiBaseUrl = "http://localhost:62806/v1/Posts"
+    private _webApiBaseUrl = "http://localhost:62806/v1/Posts"; // local
+    //private _webApiBaseUrl = "http://nickgaudreau-001-site2.htempurl.com/v1/Posts" // prod
     private _http : Http;
 
     constructor(http : Http){
@@ -20,7 +21,7 @@ export class PostServices {
     getAll(): Observable<IPost[]> {
         return this._http.get(this._webApiBaseUrl + '/all', this.getHeaders())
         .map((response: Response) => response.json())
-        .do(data => console.log(`All Data: \n ${ JSON.stringify(data) }`))
+        //.do(data => console.log(`All Data: \n ${ JSON.stringify(data) }`))
         .catch(this.handleError);
     }    
     

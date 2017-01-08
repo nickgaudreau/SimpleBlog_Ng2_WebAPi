@@ -15,7 +15,11 @@ import { CommentsServices } from './comments/comments.service';
 import { WritePostComponent } from './write-post/write-post.component';
 import { RepliesComponent } from './replies/replies.component';
 
-// TODO: this to go in his own file...
+import { CityFilterPipe } from './posts/city-filter.pipe';
+
+import { LocationServices } from './write-post/location.service'
+
+// TODO: this to go in his own file...like CityFilterPipe
 import { DomSanitizer } from '@angular/platform-browser'
 @Pipe({ name: 'escapeHtml', pure: false })
 export class EscapeHtmlPipe implements PipeTransform {
@@ -23,7 +27,7 @@ export class EscapeHtmlPipe implements PipeTransform {
     transform(value: any, args: any[] = []) {       
         // double check remove JS injection
         if (value.indexOf('<script>') != -1) {
-            console.log('JS injection. . . html purified');
+            //console.log('JS injection. . . html purified');
             return value.replace('<script>', '').replace('<\/script>', '');
         }
         return this.sanitized.bypassSecurityTrustHtml(value); // so ng2 does not remove CSS
@@ -40,7 +44,8 @@ export class EscapeHtmlPipe implements PipeTransform {
         PostDetailsComponent,
         WritePostComponent,
         RepliesComponent,
-        EscapeHtmlPipe
+        EscapeHtmlPipe,
+        CityFilterPipe
     ],
     imports: [
         BrowserModule,
@@ -68,7 +73,7 @@ export class EscapeHtmlPipe implements PipeTransform {
             }
         ])
     ],
-    providers: [PostServices, CommentsServices],
+    providers: [PostServices, CommentsServices, LocationServices],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

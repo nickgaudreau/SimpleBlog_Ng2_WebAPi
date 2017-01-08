@@ -1,10 +1,13 @@
-import { Component, OnInit, OnChanges, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { IPost } from '../posts/IPost';
+import { ILocation } from './ILocation';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { PostServices } from '../posts/posts.service';
 import { Subscription } from 'rxjs/Subscription';
+
+import { LocationServices } from './location.service'
 
 declare var $: any;
 
@@ -16,31 +19,38 @@ declare var $: any;
 export class WritePostComponent implements OnInit {
   posts: IPost[];
   errorMessage: string;
-  postSaved : boolean = false;
-  private postId : number;
-  private postUser : string;
+  postSaved: boolean = false;
+
+  txtCity: string;
+
+  worldCities: ILocation[];
+
+  private postId: number;
+  private postUser: string;
   private subscription: Subscription;
 
   private _activatedRoute: ActivatedRoute;
   private _postServices: PostServices;
+  private _locationServices: LocationServices;
   private _formBuilder: FormBuilder;
 
-  savePostForm: FormGroup;  
+  savePostForm: FormGroup;
 
   //@Output() childReadyEvent: EventEmitter<IPost[]> = new EventEmitter();
 
-  constructor(activatedRoute: ActivatedRoute, postServices: PostServices, formBuilder: FormBuilder) {
+  constructor(activatedRoute: ActivatedRoute, postServices: PostServices, locationServices: LocationServices, formBuilder: FormBuilder) {
     this._activatedRoute = activatedRoute;
     this._postServices = postServices;
+    this._locationServices = locationServices;
     this._formBuilder = formBuilder;
-    
+
     this.buildForm();
   }
 
   buildForm() {
     this.savePostForm = this._formBuilder.group({
       post_title: [null, Validators.required],
-      post_text: [null, Validators.required]
+      post_text: [null, Validators.required] // not needed with summernote - not functional anyway
     })
   }
 
@@ -50,12 +60,42 @@ export class WritePostComponent implements OnInit {
 
     // $ for summernote to load
     $('#summernote').summernote();
-  }
 
-  // TODO listener on success posts added
-  ngOnChanges() {
-    // observable required on changes... kind of
-    console.log("WritePostCompo.ngOnChanges()");  
+    // NO NEED PIPE - simply use HTML5 Datalist with inputs below testing filter by title..later will be ILocation object interface
+    this._postServices.getAll()
+      .subscribe(
+      data => { this.posts = data; console.log("data.length: " + data.length); }, // here
+      error => this.errorMessage = <any>error // <any> is a cat ops to any data type
+      );
+
+    if (typeof (Storage) !== "undefined") {
+      // Code for localStorage/sessionStorage.
+      let cities = localStorage.getItem("cities");
+      if (cities) {
+        try {
+          this.worldCities = JSON.parse(cities);
+        }
+        catch (ex) {
+          console.error(ex.name + ', ' + ex.message);
+          // if fail...get form service..
+          this._locationServices.getAll()
+            .subscribe(
+            data => { this.worldCities = data; this.setLocalStorage(data); }, // here
+            error => this.errorMessage = <any>error // <any> is a cat ops to any data type
+            );
+        }
+
+      }
+      else {
+        this._locationServices.getAll()
+          .subscribe(
+          data => { this.worldCities = data; this.setLocalStorage(data); }, // here
+          error => this.errorMessage = <any>error // <any> is a cat ops to any data type
+          );
+      }
+    } else {
+      console.error('Sorry! No Web Storage support..');
+    }
   }
 
   // on submit method
@@ -84,14 +124,19 @@ export class WritePostComponent implements OnInit {
     }
   }
 
-  onSuccessPostSaved(data : IPost){
-      if(this.posts == null)
-        this.posts = [data]
-      else
-        this.posts.push(data);
-        
-      this.postSaved = true;
-      setTimeout(() => this.postSaved = false, 2000);
+  onSuccessPostSaved(data: IPost) {
+    if (this.posts == null)
+      this.posts = [data]
+    else
+      this.posts.push(data);
+
+    this.postSaved = true;
+    setTimeout(() => this.postSaved = false, 2000);
+  }
+
+  setLocalStorage(locations: ILocation[]) {
+    localStorage.setItem("cities", JSON.stringify(locations));
+    console.log("worldCities.length: " + locations.length);
   }
 
 }
