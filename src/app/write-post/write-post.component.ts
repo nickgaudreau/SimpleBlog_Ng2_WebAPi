@@ -50,7 +50,8 @@ export class WritePostComponent implements OnInit {
   buildForm() {
     this.savePostForm = this._formBuilder.group({
       post_title: [null, Validators.required],
-      post_text: [null, Validators.required] // not needed with summernote - not functional anyway
+      post_location: [null, Validators.required],
+      post_text: [] // not needed with summernote - not functional anyway
     })
   }
 
@@ -106,6 +107,7 @@ export class WritePostComponent implements OnInit {
       let post: IPost = {
         id: 0,
         title: form.post_title,
+        location : form.post_location,
         createdDate: new Date().toLocaleDateString(), // server side, but need it here too due to async issue
         text: $('#summernote').summernote('code'),
         username: this.postUser
